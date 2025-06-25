@@ -1,0 +1,5 @@
+{
+  "python.analysis.extraPaths": [
+    "/media/max/HD/Documents/Projetos/weekly_menu_generator/.venv/lib/python3.x/site-packages"  // Linux/mac
+  ]
+}
