@@ -65,7 +65,7 @@ def train_model(X, y):
         X_train, y_train,
         validation_data=(X_val, y_val),
         epochs=100,
-        batch_size=16,
+        batch_size=8,
     )
     
     model.save('weekly_menu_generator/model/modelo_cardapio.keras')

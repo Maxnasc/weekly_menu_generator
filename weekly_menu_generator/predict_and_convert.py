@@ -1,6 +1,7 @@
 import pandas as pd
 from tensorflow.keras.models import load_model
 import numpy as np
+import random
 
 def get_menu_data():
     # Importando dados
@@ -9,7 +10,28 @@ def get_menu_data():
     df_main_menu = df_main_menu.fillna(0)
     return df_main_menu
 
-def predict(df_menu):
+def predict(df_menu, start_day):
+    def get_random_week_menu(np_menu):
+        def get_random_day(day):
+            # Filtrando dados
+            ultima_coluna = np_menu[:, -1]
+            condicao = (ultima_coluna == day)
+            np_menu_filtered = np_menu[condicao]
+            # Amostrando aleatóriamente
+            return np_menu_filtered[random.randint(0,np_menu_filtered.shape[0]), :]
+        
+        # Obter uma semana formada por cardápios de dias escolhidos aleatóriamente
+        random_week_list = [[]]
+        day = start_day
+        for i in range(7):
+            random_week_list[0].append(get_random_day(day))
+            if day == 7:
+                day = 1
+            else:
+                day+=1
+        random_week = np.array(random_week_list)
+        return random_week
+    
     # Importando o modelo keras
     model = load_model('weekly_menu_generator/model/modelo_cardapio.keras')
     
@@ -17,9 +39,14 @@ def predict(df_menu):
     df_menu_wo_id = df_menu.drop(columns='id')
     main_menu_array = df_menu_wo_id.to_numpy()
     
+    # Últimos 7 dias
     last_7_days = np.array([main_menu_array[len(main_menu_array)-7:len(main_menu_array)]])
+    # Semana aleatoria
+    random_week = get_random_week_menu(main_menu_array)
     
-    previsao = model.predict(last_7_days)
+    
+    # Fazendo a previsão
+    previsao = model.predict(random_week)
 
     previsao_discretizada = np.rint(previsao).astype(int)
 
@@ -46,7 +73,7 @@ def predict(df_menu):
     
     df_menu_appended = pd.concat([df_menu, df_previsao], ignore_index=True)
     df_menu_appended = df_menu_appended.replace(0, np.nan)
-    df_menu_appended.to_csv('data/main_menu.csv') # Ignorado por enquanto
+    # df_menu_appended.to_csv('data/main_menu.csv') # Ignorado por enquanto
     
     return previsao_discretizada
 
@@ -88,7 +115,7 @@ def save_prediction(df):
 
 def main():
     df_menu = get_menu_data()
-    result = predict(df_menu)
+    result = predict(df_menu, 6)
     result_converted = convert(result)
     save_prediction(result_converted)
     print(result_converted)
