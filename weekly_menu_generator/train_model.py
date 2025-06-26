@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Input
+from tensorflow.keras.layers import LSTM, Dense, TimeDistributed, Input, Dropout
 import matplotlib.pyplot as plt
 
 
@@ -37,7 +37,7 @@ def data_import():
 
 def train_model(X, y):
     # Separando os dados em treino e teste
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_state=42)
 
     print(X_train.shape, y_train.shape)
     print(X_val.shape, y_val.shape)
@@ -50,12 +50,14 @@ def train_model(X, y):
     model = Sequential([
         Input(shape=(n_dias, n_features)),
         LSTM(128, return_sequences=True),
+        Dropout(0.2),
         TimeDistributed(Dense(64, activation='relu')),
+        Dropout(0.2),
         TimeDistributed(Dense(n_features, activation='relu')),
     ])
 
     # Configuração do otimizador do modelo
-    model.compile(optimizer='adam', loss='mse')
+    model.compile(optimizer='adam', loss='mae')
     model.summary()
 
     # Treinamento do modelo
