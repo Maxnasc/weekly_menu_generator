@@ -45,8 +45,8 @@ def predict(df_menu):
     df_previsao.insert(0, 'id', novos_ids)
     
     df_menu_appended = pd.concat([df_menu, df_previsao], ignore_index=True)
-    df_menu_appended.replace(0, np.nan)
-    # df_menu_appended.to_csv('data/main_menu.csv') # Ignorado por enquanto
+    df_menu_appended = df_menu_appended.replace(0, np.nan)
+    df_menu_appended.to_csv('data/main_menu.csv') # Ignorado por enquanto
     
     return previsao_discretizada
 
