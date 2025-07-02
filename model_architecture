@@ -1,0 +1,17 @@
+// Model Architecture
+digraph {
+	0 [label="lstm
+(LSTM)"]
+	1 [label="dropout
+(Dropout)"]
+	0 -> 1
+	2 [label="time_distributed
+(TimeDistributed)"]
+	1 -> 2
+	3 [label="dropout_1
+(Dropout)"]
+	2 -> 3
+	4 [label="time_distributed_1
+(TimeDistributed)"]
+	3 -> 4
+}

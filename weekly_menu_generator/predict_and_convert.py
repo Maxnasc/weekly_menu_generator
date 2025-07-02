@@ -18,7 +18,7 @@ def predict(df_menu, start_day):
             condicao = (ultima_coluna == day)
             np_menu_filtered = np_menu[condicao]
             # Amostrando aleatóriamente
-            return np_menu_filtered[random.randint(0,np_menu_filtered.shape[0]), :]
+            return np_menu_filtered[random.randint(0,(np_menu_filtered.shape[0]-1)), :]
         
         # Obter uma semana formada por cardápios de dias escolhidos aleatóriamente
         random_week_list = [[]]
